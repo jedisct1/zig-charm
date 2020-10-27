@@ -100,6 +100,7 @@ pub const Charm = struct {
         for (a) |x, i| {
             d |= x ^ b[i];
         }
+        mem.doNotOptimizeAway(d);
         return d == 0;
     }
 
