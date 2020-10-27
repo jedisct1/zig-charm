@@ -60,10 +60,10 @@ const Xoodoo = struct {
 
     fn squeezePermute(self: *Xoodoo) [16]u8 {
         self.endianSwapRate();
-        const bytes = self.asBytes().*;
+        const rate = self.asBytes()[0..16].*;
         self.endianSwapRate();
         self.permute();
-        return bytes[0..16].*;
+        return rate;
     }
 };
 
