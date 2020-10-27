@@ -9,7 +9,7 @@ In this mode, each authentication tag authenticates the whole transcript since t
 
 The [original implementation](https://github.com/jedisct1/charm) was written in C and is used by the [dsvpn](https://github.com/jedisct1/dsvpn) VPN software.
 
-This is a port to the [Zig](https://ziglang.org) language.
+This is a port to the [Zig](https://ziglang.org) language. It is fully compatible with the C version.
 
 ## Usage
 
