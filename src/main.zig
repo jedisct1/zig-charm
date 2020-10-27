@@ -1,8 +1,6 @@
 const std = @import("std");
 const builtin = std.builtin;
-const debug = std.debug;
 const mem = std.mem;
-const randomBytes = std.crypto.randomBytes;
 const Vector = std.meta.Vector;
 
 const Xoodoo = struct {
@@ -67,32 +65,28 @@ const Xoodoo = struct {
         self.permute();
         return bytes[0..16].*;
     }
+};
 
-    fn new(key: [32]u8, nonce: ?[16]u8) Xoodoo {
-        var self = Xoodoo{ .state = undefined };
-        var bytes = self.asBytes();
+pub const Charm = struct {
+    x: Xoodoo,
+
+    pub const tag_length = 16;
+    pub const key_length = 32;
+    pub const nonce_length = 16;
+    pub const hash_length = 32;
+
+    pub fn new(key: [key_length]u8, nonce: ?[nonce_length]u8) Charm {
+        var x = Xoodoo{ .state = undefined };
+        var bytes = x.asBytes();
         if (nonce) |n| {
             mem.copy(u8, bytes[0..16], n[0..]);
         } else {
             mem.set(u8, bytes[0..16], 0);
         }
         mem.copy(u8, bytes[16..][0..32], key[0..]);
-        self.endianSwapAll();
-        self.permute();
-        return self;
-    }
-};
-
-pub const Charm = struct {
-    x: Xoodoo,
-
-    const tag_length = 16;
-    const key_length = 32;
-    const nonce_length = 16;
-    const hash_length = 32;
-
-    pub fn new(key: [key_length]u8, nonce: [nonce_length]u8) Charm {
-        return Charm{ .x = Xoodoo.new(key, nonce) };
+        x.endianSwapAll();
+        x.permute();
+        return Charm{ .x = x };
     }
 
     fn xor128(out: *[16]u8, in: *const [16]u8) void {
@@ -204,29 +198,6 @@ pub const Charm = struct {
     }
 };
 
-test "encrypt and hash in a session" {
-    var key: [Charm.key_length]u8 = undefined;
-    var nonce: [Charm.nonce_length]u8 = undefined;
-
-    try randomBytes(&key);
-    try randomBytes(&nonce);
-
-    const msg1_0 = "message 1";
-    const msg2_0 = "message 2";
-    var msg1 = msg1_0.*;
-    var msg2 = msg2_0.*;
-
-    var charm = Charm.new(key, nonce);
-    const tag1 = charm.encrypt(msg1[0..]);
-    const tag2 = charm.encrypt(msg2[0..]);
-    const h = charm.hash(msg1_0);
-
-    charm = Charm.new(key, nonce);
-    try charm.decrypt(msg1[0..], tag1);
-    try charm.decrypt(msg2[0..], tag2);
-    const hx = charm.hash(msg1_0);
-
-    debug.assert(mem.eql(u8, msg1[0..], msg1_0[0..]));
-    debug.assert(mem.eql(u8, msg2[0..], msg2_0[0..]));
-    debug.assert(mem.eql(u8, h[0..], hx[0..]));
+test "charm" {
+    _ = @import("test.zig");
 }
