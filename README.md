@@ -30,7 +30,7 @@ var charm = Charm.new(key, null);
 const h = charm.hash("data");
 ```
 
-### Encryption
+### Authenticated encryption
 
 #### Encryption
 
@@ -42,6 +42,14 @@ Encrypts `msg` in-place and returns a 128-bit authentication tag.
 
 #### Decryption
 
+Starting from the same state as the one used for encryption:
+
 ```zig
 try charm.decrypt(msg[0..], tag);
 ```
+
+Returns `error.AuthenticationFailed` if the authentication tag is invalid for the given message and the previous transcript.
+
+## Security guarantees
+
+128-bit security, no practical limits on the size and length of messages.
