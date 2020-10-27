@@ -10,3 +10,38 @@ In this mode, each authentication tag authenticates the whole transcript since t
 The [original implementation](https://github.com/jedisct1/charm) was written in C and is used by the [dsvpn](https://github.com/jedisct1/dsvpn) VPN software.
 
 This is a port to the [Zig](https://ziglang.org) language.
+
+## Usage
+
+### Setting up a session
+
+Charm requires a 256-bit key, and, if the key is reused for different sessions, a unique session identifier (`nonce`):
+
+```zig
+var key: [Charm.key_length]u8 = undefined;
+try std.crypto.randomBytes(&key);
+
+var charm = Charm.new(key, null);
+```
+
+### Hashing
+
+```zig
+const h = charm.hash("data");
+```
+
+### Encryption
+
+#### Encryption
+
+```zig
+const tag = charm.encrypt(msg[0..]);
+```
+
+Encrypts `msg` in-place and returns a 128-bit authentication tag.
+
+#### Decryption
+
+```zig
+try charm.decrypt(msg[0..], tag);
+```
