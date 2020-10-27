@@ -113,15 +113,13 @@ pub const Charm = struct {
         var squeezed: [16]u8 = undefined;
         var bytes = charm.x.asBytes();
         var off: usize = 0;
-        if (msg.len > 16) {
-            while (off < msg.len - 16) : (off += 16) {
-                charm.x.endianSwapRate();
-                mem.copy(u8, squeezed[0..], bytes[0..16]);
-                xor128(bytes[0..16], msg[off..][0..16]);
-                charm.x.endianSwapRate();
-                xor128(msg[off..][0..16], squeezed[0..]);
-                charm.x.permute();
-            }
+        while (off + 16 < msg.len) : (off += 16) {
+            charm.x.endianSwapRate();
+            mem.copy(u8, squeezed[0..], bytes[0..16]);
+            xor128(bytes[0..16], msg[off..][0..16]);
+            charm.x.endianSwapRate();
+            xor128(msg[off..][0..16], squeezed[0..]);
+            charm.x.permute();
         }
         const leftover = msg.len - off;
         var padded = [_]u8{0} ** (16 + 1);
@@ -142,15 +140,13 @@ pub const Charm = struct {
         var squeezed: [16]u8 = undefined;
         var bytes = charm.x.asBytes();
         var off: usize = 0;
-        if (msg.len > 16) {
-            while (off < msg.len - 16) : (off += 16) {
-                charm.x.endianSwapRate();
-                mem.copy(u8, squeezed[0..], bytes[0..16]);
-                xor128(msg[off..][0..16], squeezed[0..]);
-                xor128(bytes[0..16], msg[off..][0..16]);
-                charm.x.endianSwapRate();
-                charm.x.permute();
-            }
+        while (off + 16 < msg.len) : (off += 16) {
+            charm.x.endianSwapRate();
+            mem.copy(u8, squeezed[0..], bytes[0..16]);
+            xor128(msg[off..][0..16], squeezed[0..]);
+            xor128(bytes[0..16], msg[off..][0..16]);
+            charm.x.endianSwapRate();
+            charm.x.permute();
         }
         const leftover = msg.len - off;
         var padded = [_]u8{0} ** (16 + 1);
@@ -175,13 +171,11 @@ pub const Charm = struct {
     pub fn hash(charm: *Charm, msg: []const u8) [hash_length]u8 {
         var bytes = charm.x.asBytes();
         var off: usize = 0;
-        if (msg.len > 16) {
-            while (off < msg.len - 16) : (off += 16) {
-                charm.x.endianSwapRate();
-                xor128(bytes[0..16], msg[off..][0..16]);
-                charm.x.endianSwapRate();
-                charm.x.permute();
-            }
+        while (off + 16 < msg.len) : (off += 16) {
+            charm.x.endianSwapRate();
+            xor128(bytes[0..16], msg[off..][0..16]);
+            charm.x.endianSwapRate();
+            charm.x.permute();
         }
         const leftover = msg.len - off;
         var padded = [_]u8{0} ** (16 + 1);
