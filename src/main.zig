@@ -8,15 +8,15 @@ const Xoodoo = struct {
     const Lane = Vector(4, u32);
     state: [3]Lane,
 
-    inline fn asWords(self: *Xoodoo) *[12]u32 {
+    fn asWords(self: *Xoodoo) callconv(.Inline) *[12]u32 {
         return @ptrCast(*[12]u32, &self.state);
     }
 
-    inline fn asBytes(self: *Xoodoo) *[48]u8 {
+    fn asBytes(self: *Xoodoo) callconv(.Inline) *[48]u8 {
         return @ptrCast(*[48]u8, &self.state);
     }
 
-    inline fn rot(x: Lane, comptime n: comptime_int) Lane {
+    fn rot(x: Lane, comptime n: comptime_int) callconv(.Inline) Lane {
         return (x << @splat(4, @as(u5, n))) | (x >> @splat(4, @as(u5, 32 - n)));
     }
 
@@ -46,13 +46,13 @@ const Xoodoo = struct {
         self.state[2] = c;
     }
 
-    inline fn endianSwapRate(self: *Xoodoo) void {
+    fn endianSwapRate(self: *Xoodoo) callconv(.Inline) void {
         for (self.asWords()[0..4]) |*w| {
             w.* = mem.littleToNative(u32, w.*);
         }
     }
 
-    inline fn endianSwapAll(self: *Xoodoo) void {
+    fn endianSwapAll(self: *Xoodoo) callconv(.Inline) void {
         for (self.asWords()) |*w| {
             w.* = mem.littleToNative(u32, w.*);
         }
