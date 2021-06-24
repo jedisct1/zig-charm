@@ -104,7 +104,7 @@ pub const Charm = struct {
         return d == 0;
     }
 
-    pub fn nonceIncrement(nonce: *[nonce_length]u8, endian: comptime builtin.Endian) void {
+    pub fn nonceIncrement(nonce: *[nonce_length]u8, endian: builtin.Endian) void {
         const next = mem.readInt(u128, nonce, endian) +% 1;
         mem.writeInt(u128, nonce, next, endian);
     }
