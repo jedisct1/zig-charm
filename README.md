@@ -19,7 +19,7 @@ Charm requires a 256-bit key, and, if the key is reused for different sessions, 
 
 ```zig
 var key: [Charm.key_length]u8 = undefined;
-try std.crypto.randomBytes(&key);
+std.crypto.random.bytes(&key);
 
 var charm = Charm.new(key, null);
 ```
