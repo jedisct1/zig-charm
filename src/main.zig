@@ -1,11 +1,10 @@
 const std = @import("std");
 const builtin = @import("builtin");
 const mem = std.mem;
-const Vector = std.meta.Vector;
 
 const Xoodoo = struct {
     const rcs = [12]u32{ 0x058, 0x038, 0x3c0, 0x0d0, 0x120, 0x014, 0x060, 0x02c, 0x380, 0x0f0, 0x1a0, 0x012 };
-    const Lane = Vector(4, u32);
+    const Lane = @Vector(4, u32);
     state: [3]Lane,
 
     inline fn asWords(self: *Xoodoo) *[12]u32 {
@@ -39,7 +38,7 @@ const Xoodoo = struct {
             b ^= ~c & a;
             c ^= ~a & b;
             b = rot(b, 1);
-            c = @bitCast(Lane, @shuffle(u8, @bitCast(Vector(16, u8), c), undefined, [_]i32{ 11, 8, 9, 10, 15, 12, 13, 14, 3, 0, 1, 2, 7, 4, 5, 6 }));
+            c = @bitCast(Lane, @shuffle(u8, @bitCast(@Vector(16, u8), c), undefined, [_]i32{ 11, 8, 9, 10, 15, 12, 13, 14, 3, 0, 1, 2, 7, 4, 5, 6 }));
         }
         self.state[0] = a;
         self.state[1] = b;
