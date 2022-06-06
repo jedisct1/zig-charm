@@ -53,3 +53,8 @@ Returns `error.AuthenticationFailed` if the authentication tag is invalid for th
 ## Security guarantees
 
 128-bit security, no practical limits on the size and length of messages.
+
+## Other implementations:
+
+- [charm](https://github.com/jedisct1/charm) original implementation in C.
+- [charm.js](https://github.com/jedisct1/charm.js) a JavaScript (TypeScript) implementation.
