@@ -1,5 +1,6 @@
 const std = @import("std");
 const builtin = @import("builtin");
+const math = std.math;
 const mem = std.mem;
 
 const Xoodoo = struct {
@@ -15,29 +16,25 @@ const Xoodoo = struct {
         return @ptrCast(*[48]u8, &self.state);
     }
 
-    inline fn rot(x: Lane, comptime n: comptime_int) Lane {
-        return (x << @splat(4, @as(u5, n))) | (x >> @splat(4, @as(u5, 32 - n)));
-    }
-
     fn permute(self: *Xoodoo) void {
         var a = self.state[0];
         var b = self.state[1];
         var c = self.state[2];
         inline for (rcs) |rc| {
             var p = @shuffle(u32, a ^ b ^ c, undefined, [_]i32{ 3, 0, 1, 2 });
-            var e = rot(p, 5);
-            p = rot(p, 14);
+            var e = math.rotl(Lane, p, 5);
+            p = math.rotl(Lane, p, 14);
             e ^= p;
             a ^= e;
             b ^= e;
             c ^= e;
             b = @shuffle(u32, b, undefined, [_]i32{ 3, 0, 1, 2 });
-            c = rot(c, 11);
+            c = math.rotl(Lane, c, 11);
             a[0] ^= rc;
             a ^= ~b & c;
             b ^= ~c & a;
             c ^= ~a & b;
-            b = rot(b, 1);
+            b = math.rotl(Lane, b, 1);
             c = @bitCast(Lane, @shuffle(u8, @bitCast(@Vector(16, u8), c), undefined, [_]i32{ 11, 8, 9, 10, 15, 12, 13, 14, 3, 0, 1, 2, 7, 4, 5, 6 }));
         }
         self.state[0] = a;
