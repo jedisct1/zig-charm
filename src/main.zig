@@ -13,7 +13,7 @@ const Xoodoo = struct {
     }
 
     inline fn asBytes(self: *Xoodoo) *[48]u8 {
-        return @ptrCast(*[48]u8, &self.state);
+        return mem.asBytes(&self.state);
     }
 
     fn permute(self: *Xoodoo) void {
