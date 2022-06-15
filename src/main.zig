@@ -17,6 +17,11 @@ const Xoodoo = struct {
     }
 
     fn permute(self: *Xoodoo) void {
+        const rot8x32 = comptime if (builtin.target.cpu.arch.endian() == .Big)
+            [_]i32{ 9, 10, 11, 8, 13, 14, 15, 12, 1, 2, 3, 0, 5, 6, 7, 4 }
+        else
+            [_]i32{ 11, 8, 9, 10, 15, 12, 13, 14, 3, 0, 1, 2, 7, 4, 5, 6 };
+
         var a = self.state[0];
         var b = self.state[1];
         var c = self.state[2];
@@ -35,7 +40,7 @@ const Xoodoo = struct {
             b ^= ~c & a;
             c ^= ~a & b;
             b = math.rotl(Lane, b, 1);
-            c = @bitCast(Lane, @shuffle(u8, @bitCast(@Vector(16, u8), c), undefined, [_]i32{ 11, 8, 9, 10, 15, 12, 13, 14, 3, 0, 1, 2, 7, 4, 5, 6 }));
+            c = @bitCast(Lane, @shuffle(u8, @bitCast(@Vector(16, u8), c), undefined, rot8x32));
         }
         self.state[0] = a;
         self.state[1] = b;
