@@ -5,6 +5,10 @@ pub fn build(b: *std.Build) void {
 
     const optimize = b.standardOptimizeOption(.{});
 
+    _ = b.addModule("charm", .{
+        .root_source_file = b.path("src/main.zig"),
+    });
+
     const lib = b.addStaticLibrary(.{
         .name = "charm",
         .root_source_file = b.path("src/main.zig"),
