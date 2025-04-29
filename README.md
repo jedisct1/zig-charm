@@ -58,3 +58,4 @@ Returns `error.AuthenticationFailed` if the authentication tag is invalid for th
 
 - [charm](https://github.com/jedisct1/charm) original implementation in C.
 - [charm.js](https://github.com/jedisct1/charm.js) a JavaScript (TypeScript) implementation.
+- [go-charm](https://github.com/x13a/go-charm) a Go implementation.
