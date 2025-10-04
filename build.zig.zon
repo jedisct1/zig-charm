@@ -1,8 +1,8 @@
 .{
     .name = .charm,
-    .version = "1.0.0",
+    .version = "1.0.1",
     .fingerprint = 0x813d82eac977a7f9,
-    .minimum_zig_version = "0.14.0",
+    .minimum_zig_version = "0.15.1",
     .dependencies = .{},
     .paths = .{
         "build.zig",
