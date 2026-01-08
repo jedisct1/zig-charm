@@ -2,7 +2,7 @@
     .name = .charm,
     .version = "1.0.1",
     .fingerprint = 0x813d82eac977a7f9,
-    .minimum_zig_version = "0.15.1",
+    .minimum_zig_version = "0.16.0-dev",
     .dependencies = .{},
     .paths = .{
         "build.zig",

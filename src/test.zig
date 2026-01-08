@@ -1,15 +1,16 @@
 const std = @import("std");
 const debug = std.debug;
 const mem = std.mem;
-const random = std.crypto.random;
 const Charm = @import("main.zig").Charm;
 
 test "encrypt and hash in a session" {
+    const io = std.Io.Threaded.global_single_threaded.io();
+
     var key: [Charm.key_length]u8 = undefined;
     var nonce: [Charm.nonce_length]u8 = undefined;
 
-    random.bytes(&key);
-    random.bytes(&nonce);
+    io.random(&key);
+    io.random(&nonce);
 
     const msg1_0 = "message 1";
     const msg2_0 = "message 2";
