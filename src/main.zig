@@ -123,7 +123,7 @@ pub const Charm = struct {
             charm.x.permute();
         }
         const leftover = msg.len - off;
-        var padded = [_]u8{0} ** (16 + 1);
+        var padded: [16 + 1]u8 = @splat(0);
         @memcpy(padded[0..leftover], msg[off..][0..leftover]);
         padded[leftover] = 0x80;
         charm.x.endianSwapRate();
@@ -150,7 +150,7 @@ pub const Charm = struct {
             charm.x.permute();
         }
         const leftover = msg.len - off;
-        var padded = [_]u8{0} ** (16 + 1);
+        var padded: [16 + 1]u8 = @splat(0);
         @memcpy(padded[0..leftover], msg[off..][0..leftover]);
         charm.x.endianSwapRate();
         @memset(squeezed[0..], 0);
@@ -179,7 +179,7 @@ pub const Charm = struct {
             charm.x.permute();
         }
         const leftover = msg.len - off;
-        var padded = [_]u8{0} ** (16 + 1);
+        var padded: [16 + 1]u8 = @splat(0);
         @memcpy(padded[0..leftover], msg[off..][0..leftover]);
         padded[leftover] = 0x80;
         charm.x.endianSwapRate();
