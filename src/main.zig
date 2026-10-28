@@ -130,7 +130,7 @@ pub const Charm = struct {
         @memcpy(squeezed[0..], bytes[0..16]);
         xor128(bytes[0..16], padded[0..16]);
         charm.x.endianSwapRate();
-        charm.x.asWords()[11] ^= (@as(u32, 1) << 24 | @as(u32, @intCast(leftover)) >> 4 << 25 | @as(u32, 1) << 26);
+        charm.x.asWords()[11] ^= (@as(u32, 1) << 24) | ((@as(u32, @intCast(leftover)) >> 4) << 25) | (@as(u32, 1) << 26);
         xor128(padded[0..16], squeezed[0..]);
         @memcpy(msg[off..][0..leftover], padded[0..leftover]);
         charm.x.permute();
@@ -159,7 +159,7 @@ pub const Charm = struct {
         padded[leftover] = 0x80;
         xor128(bytes[0..16], padded[0..16]);
         charm.x.endianSwapRate();
-        charm.x.asWords()[11] ^= (@as(u32, 1) << 24 | @as(u32, @intCast(leftover)) >> 4 << 25 | @as(u32, 1) << 26);
+        charm.x.asWords()[11] ^= (@as(u32, 1) << 24) | ((@as(u32, @intCast(leftover)) >> 4) << 25) | (@as(u32, 1) << 26);
         @memcpy(msg[off..][0..leftover], padded[0..leftover]);
         charm.x.permute();
         const tag = charm.x.squeezePermute();
@@ -185,7 +185,7 @@ pub const Charm = struct {
         charm.x.endianSwapRate();
         xor128(bytes[0..16], padded[0..16]);
         charm.x.endianSwapRate();
-        charm.x.asWords()[11] ^= (@as(u32, 1) << 24 | @as(u32, @intCast(leftover)) >> 4 << 25);
+        charm.x.asWords()[11] ^= (@as(u32, 1) << 24) | ((@as(u32, @intCast(leftover)) >> 4) << 25);
         charm.x.permute();
         var h: [hash_length]u8 = undefined;
         @memcpy(h[0..16], charm.x.squeezePermute()[0..]);
